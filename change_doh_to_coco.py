@@ -1,6 +1,5 @@
 import json
 import collections as cl
-# import cv2
 import os
 
 def get_info():
@@ -32,18 +31,6 @@ def get_image_data(id, annotation, image_file):
     tmp["id"] = id
     return tmp
 
-# def get_annotation(id, image_id, category_id, bbox, segmentation):
-#     tmp = cl.OrderedDict()
-
-#     tmp["segmentation"] = segmentation
-#     tmp["id"] = id
-#     tmp["image_id"] = image_id
-#     tmp["category_id"] = category_id
-#     tmp["area"] = bbox[2] * bbox[3]
-#     tmp["iscrowd"] = 0
-#     tmp["bbox"] =  bbox
-#     return tmp
-
 def get_categories():
     tmps = []
     sup = ["N/A", "hand", "object"]
@@ -71,14 +58,13 @@ def main(annotation_dir, json_path):
     images = []
     annotations = []
 
+    # get image data and annotations
     count_ano_id = 0
     for i, image_file in enumerate(image_list):    
         annotation_origin = annotations_origin[image_file]
-        # print(annotation_origin)
-        # print(type(annotation_origin))
         image_data = get_image_data(i, annotation_origin[0], image_file)
 
-        # get annotation
+        # get annotation per image
         old_obj_bbox = None # 同一画像内の1つ前のobj_bboxを保存しておく
         for side_annotation in annotation_origin:
             side_annotation_dict = cl.OrderedDict()
@@ -118,14 +104,9 @@ def main(annotation_dir, json_path):
                 side_obj_annotation_dict["bbox"] = new_obj_bbox
 
                 if new_obj_bbox != old_obj_bbox:
-                    # print(count_ano_id, "new_obj_bbox", new_obj_bbox)
-                    # print(count_ano_id, "old_obj_bbox", old_obj_bbox)
                     annotations.append(side_obj_annotation_dict)
-                    # print("made new annotation")
                 old_obj_bbox = new_obj_bbox
 
-
-        
         images.append(image_data)
     print("Made file")
 
@@ -140,11 +121,6 @@ def main(annotation_dir, json_path):
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(json_data, f, ensure_ascii=False, indent=2)
 
-
-
-# annotation_dir = "check_trainval.json"
-# json_path = "check_trainval_cocof.json"
-# main(annotation_dir, json_path)
 
 annotation_dir_list = ["check_trainval.json", "trainval.json", "check_test.json", "test.json"]
 json_path_list = ["check_trainval_cocof.json", "trainval_cocof.json", "check_test_cocof.json", "test_cocof.json"]
