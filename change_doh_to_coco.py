@@ -122,8 +122,8 @@ def main(annotation_dir, json_path):
         json.dump(json_data, f, ensure_ascii=False, indent=2)
 
 
-annotation_dir_list = ["check_trainval.json", "trainval.json", "check_test.json", "test.json"]
-json_path_list = ["check_trainval_cocof.json", "trainval_cocof.json", "check_test_cocof.json", "test_cocof.json"]
+annotation_dir_list = ["trainval.json", "test.json"]
+json_path_list = ["trainval_cocof.json", "test_cocof.json"]
 for a, j in zip(annotation_dir_list, json_path_list):
     print(a, j)
     main(a, j)
